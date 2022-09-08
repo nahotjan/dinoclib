@@ -139,3 +139,5 @@ def extract(
   # Rename volumes with mapped letter
   if rename_volumes:
     _rename_volumes(destination_path)
+
+  return True
