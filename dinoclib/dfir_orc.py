@@ -77,7 +77,47 @@ def extract(
   rename_volumes: bool = True,
   archive_name: str = ""
 ) -> bool:
+  """
+  Extract all artifacts from a DFIR-Orc archive.
+  The function rebuild the file tree and rename files with their true name.
+  Using this function allow parsers to work like if running on dumped drive.
 
+  An output exemple could be:
+
+  <destination_path>
+     ├─ orc_outputs
+     |  ├─ commands
+     |  └─ logs
+     ├─ C
+     |  ├─ Program Files
+     |  ├─ Users
+     |  ...
+     |  └─ Windows
+     ├─ C (vss XXXXX)
+     |  ├─ ...
+     |  └─ ...
+     └─ D
+        ├─ ...
+        └─ ...
+
+  Note: Due to the the intensive IO ressources needed, it is prefered to not use network
+  folder for both archive_path and destination_path values.
+
+  TODO: Handle p7b archives
+  TODO: Handle password protected
+  TODO: Check if we use timestomping when writng the file
+
+  Args:
+    archive_path: DFIR-Orc archive file (7z).
+    destination_path: Destination to extract the file.
+    default_password: The password to use if the archive is protected.
+    rename_volumes: Indicates if the function should rename the volumes.
+    archive_name: The name of the current archive parsed. Mainly used by the recursive called
+                  when facing a nexted 7z archive.
+
+  Returns:
+    Output format as a string.
+  """
   cmd_ouptuts_path = destination_path.joinpath('orc_outputs', 'commands')
   logs_path = destination_path.joinpath('orc_outputs', 'logs')
   script_logs_path = destination_path.joinpath('non_extracted.log')
@@ -86,6 +126,7 @@ def extract(
   archive_name = archive_path.name if isinstance(archive_path, pathlib.Path) else archive_name
 
   # Open archive
+  #TODO: Handle p7b archives
   #TODO: Handle password protected
   try:
     archive = SevenZipFile(archive_path)
@@ -127,8 +168,7 @@ def extract(
     else:
       final_path = cmd_ouptuts_path.joinpath(filename)
 
-    # Write file
-    # TODO: if something wrong do something about it    
+    # Write file 
     if not _write_file(final_path, file_content):
       script_log.write(f'{archive_name},{filename},{final_path}\n')
       pass
