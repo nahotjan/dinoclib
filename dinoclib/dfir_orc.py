@@ -84,21 +84,21 @@ def extract(
 
   An output exemple could be:
 
-  <destination_path>
-     ├─ orc_outputs
-     |  ├─ commands
-     |  └─ logs
-     ├─ C
-     |  ├─ Program Files
-     |  ├─ Users
-     |  ...
-     |  └─ Windows
-     ├─ C (vss XXXXX)
-     |  ├─ ...
-     |  └─ ...
-     └─ D
-        ├─ ...
-        └─ ...
+  | <destination_path>
+  |    ├─ orc_outputs
+  |    |  ├─ commands     # Folder containing everything not collected by GetThis (should be command result)
+  |    |  └─ logs         # Folder containing all orc logs files
+  |    ├─ C
+  |    |  ├─ Program Files
+  |    |  ├─ Users
+  |    |  ...
+  |    |  └─ Windows
+  |    ├─ C (vss {SNAPSHOT ID})
+  |    |  ├─ ...
+  |    |  └─ ...
+  |    └─ D
+  |       ├─ ...
+  |       └─ ...
 
   Note: Due to the the intensive IO ressources needed, it is prefered to not use network
   folder for both archive_path and destination_path values.
